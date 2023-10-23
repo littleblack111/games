@@ -28,28 +28,61 @@ def askuserinit():
 			printerror("Please input a valid difficulty.")
 			raise ValueError("Invalid difficulty")
 
+def winending():
+	printinfo("Congratulations, you win!")
+	exit(0)
+
+def loseending():
+	printwarning("You lose!")
+	printerror("RuntimeError: CRASHING Computer........")
+	raise RuntimeError("You lose!")
+
 def userdet():
+	guestries = 0
 	while True:
 		currentGuest = keepasks("Guest number: ")
 		try:
 			currentGuest = int(currentGuest)
+			guestries += 1
 		except ValueError:
 			printerror("Please input a valid guest number.")
 			continue
 		if currentGuest > ansnum:
-			printwarning("Too big.")
+			if currentGuest < ansnum:
+				printwarning("Too big.")
+			elif currentGuest+30 < ansnum:
+				printwarning("very big.")
+			elif currentGuest+15 < ansnum:
+				printwarning("big, but close enough")
+			else:
+				printwarning("big, but very close")
 		elif currentGuest < ansnum:
-			printwarning("Too small.")
+			if currentGuest+50 < ansnum:
+				printwarning("Too small.")
+			elif currentGuest+35 < ansnum:
+				printwarning("very small.")
+			elif currentGuest+15 < ansnum:
+				printwarning("small, but close enough")
+			else:
+				printwarning("small, but very close")
 		elif currentGuest == ansnum:
-			printinfo("You got the one")
-
+			winending()
+		if guestries == 5:
+			printwarning("You tried a few times, come on")
+		elif guestries == 10:
+			printwarning("You tried these much?? Come On bro")
+		elif guestries == 20:
+			printwarning("Bro come on, i beliven you")
+		elif guestries == 23:
+			printwarning("Ok bro, 2 more chances...")
+		elif guestries >= 25:
+			loseending()
 
 
 def main():
 	askuserinit()
 	initnum(difficulty)
 	userdet()
-	
 
 if __name__ == "__main__":
 	main()
