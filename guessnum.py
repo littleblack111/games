@@ -9,11 +9,13 @@ def initnum(difficulty: int):
 		ansnum = randint(1, 250)
 	elif difficulty == 3:
 		ansnum = randint(1, 500)
+	else:
+		ansnum = randint(1, difficulty)
 
 
 def askuserinit():
 	global difficulty
-	difficulty = keepasks("Difficulty(E[asy], N[ormal], H[ard]/1, 2, 3): ")
+	difficulty = keepasks(f"{ascii.color.cyan}Difficulty({ascii.color.purple}E{ascii.color.yellow}[{ascii.color.green}asy{ascii.color.yellow}]{ascii.color.reset}, {ascii.color.purple}N{ascii.color.yellow}[{ascii.color.green}ormal{ascii.color.yellow}]{ascii.color.reset}, {ascii.color.purple}H{ascii.color.yellow}[{ascii.color.green}ard{ascii.color.yellow}]/{ascii.color.green}1{ascii.color.reset}, {ascii.color.green}2{ascii.color.reset}, {ascii.color.green}3{ascii.color.reset}/{ascii.color.green}custom{ascii.color.yellow}({ascii.color.purple}n{ascii.color.yellow}{{{ascii.color.cyan}100{ascii.color.yellow}}}{ascii.color.yellow}){ascii.color.blue}){ascii.color.reset}: {ascii.color.red}")
 	difficulty = difficulty.lower()
 	if difficulty == "e" or difficulty == "easy":
 		difficulty = 1
@@ -21,15 +23,25 @@ def askuserinit():
 		difficulty = 2
 	elif difficulty == "h" or difficulty == "hard":
 		difficulty = 3
+	elif difficulty.startswith("n"):
+		try:
+			difficulty = difficulty.replace("n", "")
+			difficulty = int(difficulty)
+		except ValueError:
+			printerror("Please input a valid difficulty number.")
+			askuserinit()
 	else:
 		try:
 			difficulty = int(difficulty)
 		except ValueError:
 			printerror("Please input a valid difficulty.")
-			raise ValueError("Invalid difficulty")
+			askuserinit()
+		if difficulty not in [1, 2, 3]:
+			printerror("Please input a valid difficulty number(1 for easy, 2 for noraml, 3 for hard or n{num} for custom.")
+			askuserinit()
 
 def winending():
-	printinfo("Congratulations, you win!")
+	printinfo("Congratulations, You Win!")
 	exit(0)
 
 def loseending():
@@ -40,42 +52,40 @@ def loseending():
 def userdet():
 	guestries = 0
 	while True:
-		currentGuest = keepasks("Guest number: ")
+		currentGuest = keepasks(f"{ascii.color.yellow}Please enter your guess number {ascii.color.green}> {ascii.color.lgreen}")
 		try:
 			currentGuest = int(currentGuest)
 			guestries += 1
 		except ValueError:
-			printerror("Please input a valid guest number.")
+			printerror("Please input a valid guest number!")
 			continue
 		if currentGuest > ansnum:
 			if currentGuest < ansnum:
-				printwarning("Too big.")
+				printwarning("Number too big.")
 			elif currentGuest+30 < ansnum:
-				printwarning("very big.")
+				printwarning("Number very big.")
 			elif currentGuest+15 < ansnum:
-				printwarning("big, but close enough")
+				printwarning("quiet Big, but close enough")
 			else:
-				printwarning("big, but very close")
+				printwarning("little big, but very close")
 		elif currentGuest < ansnum:
 			if currentGuest+50 < ansnum:
-				printwarning("Too small.")
+				printwarning("Number too small.")
 			elif currentGuest+35 < ansnum:
-				printwarning("very small.")
+				printwarning("Number very small.")
 			elif currentGuest+15 < ansnum:
-				printwarning("small, but close enough")
+				printwarning("quiet small, but close enough")
 			else:
-				printwarning("small, but very close")
+				printwarning("little small, but very close")
 		elif currentGuest == ansnum:
 			winending()
-		if guestries == 5:
-			printwarning("You tried a few times, come on")
 		elif guestries == 10:
-			printwarning("You tried these much?? Come On bro")
-		elif guestries == 20:
-			printwarning("Bro come on, i beliven you")
-		elif guestries == 23:
-			printwarning("Ok bro, 2 more chances...")
-		elif guestries >= 25:
+			printwarning("How are you still not getting there? Come On bro!")
+		elif guestries == 15:
+			printwarning("Bro come on, I beliven you!")
+		elif guestries == 17:
+			printwarning("Ok bro, 3 more chances...")
+		elif guestries >= 20:
 			loseending()
 
 
