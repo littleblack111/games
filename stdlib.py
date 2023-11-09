@@ -1,12 +1,5 @@
 #!/dev/null
 
-# imports
-from rich.console import Console as console
-from rich.syntax import Syntax as syntax
-from rich import print as rprint
-from argparse import ArgumentParser as arg
-
-
 # text ascii codes
 class ascii:
 	### ASCII
@@ -153,8 +146,8 @@ def aprintf(*value: str, interval=0.01, end=None):
 		printf(i)
 		if ani:
 			sleep(interval)
-	if end == None:
-		printf('\n')
+	if end is None:
+		printf(f'{ascii.color.reset}\n')
 	else:
 		printf(end)
 
@@ -175,10 +168,22 @@ def printerror(str: str, outputter=aprintf, ccolor=ascii.color.red, end=None):
 
 def ainputf(str: str, end='', ccolor=ascii.color.purple):
 	aprintf(str, end=end)
+	import readline
 	return input()
+
+def input(*arg):
+    import readline
+    from builtins import input
+    input(*arg)
 
 def askinput(str: str, inputter=ainputf, ccolor=ascii.color.blue):
 	return inputter(f"{ccolor}[?] {str}{ascii.color.reset}")
+
+def keepasks(info: str, inputter=ainputf, *inputargs):
+	tmprespond = ""
+	while tmprespond == "" or tmprespond == " " or tmprespond is None:
+		tmprespond = inputter(info, *inputargs)
+	return tmprespond
 
 # animated countdown from @timeoutsec
 def countdown(timeoutsec: int):
@@ -192,12 +197,6 @@ def countdown(timeoutsec: int):
 		timeoutsec -= 1
 		sleep(0.2)
 	print(1)
-
-def keepasks(info: str, inputter=ainputf, *inputargs):
-	tmprespond = ""
-	while tmprespond == "" or tmprespond == " ":
-		tmprespond = inputter(info, *inputargs)
-	return tmprespond
 
 # TODO: make aloading() in threading
 # animated loading with @msg
@@ -226,23 +225,40 @@ def bgexec(func, arg=False, stop=False):
 		else:
 			t = Thread(target=func).start()
 
+# to give a absolutly perfect path to the location of a file or self(directory)
+def rpath(file: str=None) -> str:
+	from os import path
+	if file:
+		if path.islink(file):
+			from os import readlink
+			file = readlink(file)
+		return f'{path.dirname(path.abspath(__file__))}/{file}'
+	else:
+		return path.dirname(path.abspath(__file__))
+
+# run another python file(utils)
+def runutil(file: str, *arg) -> any:
+	from sys import executable
+	from os import execv
+	execv(executable, ['python3', f'{rpath()}/{file}'] + list(arg))
+
 # TODO: fix this "TypeError: Please input @sig as a int(signal number, like 15) or str(signal name, like SIGTERM", tried signal.SIGINT, or str(signal name, like SIGTERM)
 # catch & handle signals
 def sigcatch(sig, error=None, sysexit=False, handler=None):
 	from signal import signal
-	if handler != None:
+	if handler is not None:
 		pass
-	elif error == None:
+	elif error is None:
 		def handler(sig, stack):
 			printerror(f"catched kill signal: {sig}")
 			if sysexit:
-				import sys.exit
-				sys.exit(sig)
+				from sys import exit as sysexit
+				sysexit(sig)
 	elif error:
 		def handler(sig, stack):
 			printerror(error)
 			if sysexit:
-				sys.exit(sig)
+				sysexit(sig)
 	if sig == str:
 		from signal import sig
 		signal(signal.sig, handler)
