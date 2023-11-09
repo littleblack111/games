@@ -2,7 +2,7 @@ from random import randint
 from stdlib import *
 from gamelib import *
 
-def initnum(difficulty: int):
+def initnum(difficulty: int) -> None:
 	global ansnum
 	if difficulty == 1:
 		ansnum = randint(1, 100)
@@ -14,7 +14,7 @@ def initnum(difficulty: int):
 		ansnum = randint(1, difficulty)
 
 
-def askuserinit():
+def askuserinit() -> None:
 	global difficulty
 	difficulty = keepasks(f"{ascii.color.cyan}Difficulty({ascii.color.purple}E{ascii.color.yellow}[{ascii.color.green}asy{ascii.color.yellow}]{ascii.color.reset}, {ascii.color.purple}N{ascii.color.yellow}[{ascii.color.green}ormal{ascii.color.yellow}]{ascii.color.reset}, {ascii.color.purple}H{ascii.color.yellow}[{ascii.color.green}ard{ascii.color.yellow}]/{ascii.color.green}1{ascii.color.reset}, {ascii.color.green}2{ascii.color.reset}, {ascii.color.green}3{ascii.color.reset}/{ascii.color.green}custom{ascii.color.yellow}({ascii.color.purple}n{ascii.color.yellow}{{{ascii.color.cyan}100{ascii.color.yellow}}}{ascii.color.yellow}){ascii.color.blue}){ascii.color.reset}: {ascii.color.red}")
 	difficulty = difficulty.lower()
@@ -41,7 +41,7 @@ def askuserinit():
 			printerror("Please input a valid difficulty number(1 for easy, 2 for noraml, 3 for hard or n{num} for custom.")
 			askuserinit()
 
-def userdet():
+def userdet() -> None:
 	guestries = 0
 	while True:
 		currentGuest = keepasks(f"{ascii.color.yellow}Please enter your guess number {ascii.color.green}> {ascii.color.lgreen}")
@@ -81,7 +81,7 @@ def userdet():
 			loseending()
 
 
-def main():
+def main() -> None:
 	askuserinit()
 	initnum(difficulty)
 	userdet()
