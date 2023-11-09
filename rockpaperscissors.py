@@ -31,3 +31,11 @@ match mode:
             print(f"player win!")
         else:
             print(f"bot win!")
+
+
+from stdlib import *
+from random import randint
+
+def initAnswer() -> int:
+    return randint(1, 3)
+
