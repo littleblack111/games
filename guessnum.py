@@ -1,5 +1,6 @@
 from random import randint
 from stdlib import *
+from gamelib import *
 
 def initnum(difficulty: int):
 	global ansnum
@@ -39,15 +40,6 @@ def askuserinit():
 		if difficulty not in [1, 2, 3]:
 			printerror("Please input a valid difficulty number(1 for easy, 2 for noraml, 3 for hard or n{num} for custom.")
 			askuserinit()
-
-def winending():
-	printinfo("Congratulations, You Win!")
-	exit(0)
-
-def loseending():
-	printwarning("You lose!")
-	printerror("RuntimeError: CRASHING Computer........")
-	raise RuntimeError("You lose!")
 
 def userdet():
 	guestries = 0
